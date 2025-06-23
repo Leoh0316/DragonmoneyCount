@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>월간 카운터</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    body { font-family: sans-serif; padding: 20px; background: #fefefe; max-width: 500px; margin: auto; }
+    h1 { text-align: center; font-size: 24px; }
+    .counter { background: #f0f0f0; border-radius: 12px; padding: 15px; margin: 10px 0; }
+    .label { font-size: 18px; margin-bottom: 10px; }
+    .buttons { display: flex; gap: 10px; }
+    .buttons button { flex: 1; padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>📅 월간 카운터</h1>
+  <div id="counters"></div>
+
+  <script>
+    const categories = [
+      { name: "독서", max: 30 },
+      { name: "공부", max: 30 },
+      { name: "정리", max: 30 },
+      { name: "100점", max: 10 },
+    ];
+
+    const today = new Date();
+    const currentMonth = `${today.getFullYear()}-${today.getMonth() + 1}`;
+    const savedMonth = localStorage.getItem("lastReset");
+
+    if (savedMonth !== currentMonth) {
+      const initialCounts = {};
+      categories.forEach(c => initialCounts[c.name] = 0);
+      localStorage.setItem("counts", JSON.stringify(initialCounts));
+      localStorage.setItem("lastReset", currentMonth);
+    }
+
+    let counts = JSON.parse(localStorage.getItem("counts")) || {};
+    const container = document.getElementById("counters");
+
+    function updateStorage() {
+      localStorage.setItem("counts", JSON.stringify(counts));
+      render();
+    }
+
+    function changeCount(name, delta, max) {
+      counts[name] = Math.min(max, Math.max(0, (counts[name] || 0) + delta));
+      updateStorage();
+    }
+
+    function render() {
+      container.innerHTML = "";
+      categories.forEach(({ name, max }) => {
+        const div = document.createElement("div");
+        div.className = "counter";
+        div.innerHTML = `
+          <div class="label">${name}: ${counts[name] || 0} / ${max}</div>
+          <div class="buttons">
+            <button onclick="changeCount('${name}', 1, ${max})">＋</button>
+            <button onclick="changeCount('${name}', -1, ${max})">－</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    window.changeCount = changeCount;
+    render();
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+</body>
+</html>
