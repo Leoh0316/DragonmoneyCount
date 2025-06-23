@@ -6,17 +6,57 @@
   <title>월간 카운터</title>
   <link rel="manifest" href="manifest.json">
   <style>
-    body { font-family: sans-serif; padding: 20px; background: #fefefe; max-width: 500px; margin: auto; }
-    h1 { text-align: center; font-size: 24px; }
-    .counter { background: #f0f0f0; border-radius: 12px; padding: 15px; margin: 10px 0; }
-    .label { font-size: 18px; margin-bottom: 10px; }
-    .buttons { display: flex; gap: 10px; }
-    .buttons button { flex: 1; padding: 10px; font-size: 16px; }
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background: #fefefe;
+      max-width: 500px;
+      margin: auto;
+      position: relative;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+    }
+    .counter {
+      background: #f0f0f0;
+      border-radius: 12px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+    .label {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+    .buttons button {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+    }
+    #saveBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 16px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <h1>📅 월간 카운터</h1>
   <div id="counters"></div>
+  <button id="saveBtn">💾 저장</button>
 
   <script>
     const categories = [
@@ -28,29 +68,23 @@
 
     const today = new Date();
     const currentMonth = `${today.getFullYear()}-${today.getMonth() + 1}`;
-    const savedMonth = localStorage.getItem("lastReset");
+    const currentDateKey = today.toISOString().split("T")[0]; // YYYY-MM-DD
+    const lastResetDate = localStorage.getItem("lastReset");
 
-    if (savedMonth !== currentMonth) {
-      const initialCounts = {};
-      categories.forEach(c => initialCounts[c.name] = 0);
-      localStorage.setItem("counts", JSON.stringify(initialCounts));
-      localStorage.setItem("lastReset", currentMonth);
+    let counts = JSON.parse(localStorage.getItem("savedCounts")) || {};
+
+    // 🔁 매달 1일이면 자동 초기화
+    const isFirstOfMonth = today.getDate() === 1;
+    if (lastResetDate !== currentDateKey && isFirstOfMonth) {
+      counts = {};
+      categories.forEach(c => counts[c.name] = 0);
+      localStorage.setItem("savedCounts", JSON.stringify(counts));
+      localStorage.setItem("lastReset", currentDateKey);
     }
 
-    let counts = JSON.parse(localStorage.getItem("counts")) || {};
     const container = document.getElementById("counters");
 
-    function updateStorage() {
-      localStorage.setItem("counts", JSON.stringify(counts));
-      render();
-    }
-
-    function changeCount(name, delta, max) {
-      counts[name] = Math.min(max, Math.max(0, (counts[name] || 0) + delta));
-      updateStorage();
-    }
-
-    function render() {
+    function updateDisplay() {
       container.innerHTML = "";
       categories.forEach(({ name, max }) => {
         const div = document.createElement("div");
@@ -66,12 +100,26 @@
       });
     }
 
-    window.changeCount = changeCount;
-    render();
+    function changeCount(name, delta, max) {
+      counts[name] = Math.min(max, Math.max(0, (counts[name] || 0) + delta));
+      updateDisplay(); // 실시간 업데이트만 (저장은 수동!)
+    }
 
+    // 저장 버튼 기능
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      localStorage.setItem("savedCounts", JSON.stringify(counts));
+      alert("✅ 저장 완료!");
+    });
+
+    updateDisplay();
+
+    // 서비스워커 등록 (PWA)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
+
+    // 전역에서 사용 가능하게
+    window.changeCount = changeCount;
   </script>
 </body>
 </html>
