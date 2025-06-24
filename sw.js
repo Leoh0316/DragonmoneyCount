@@ -1,4 +1,4 @@
-const CACHE_NAME = 'counter-app-v2'; // ← 여기에 버전 명시!
+const CACHE_NAME = 'counter-app-v10'; //
 
 const urlsToCache = [
   '/',
