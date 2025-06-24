@@ -1,6 +1,6 @@
 {
-  "name": "월간 카운터",
-  "short_name": "카운터",
+  "name": "우리들의 용돈 기록부",
+  "short_name": "용돈 기록부",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
