@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>월간 카운터</title>
   <link rel="manifest" href="manifest.json">
-
   <style>
     @font-face {
-      font-family: 'Euljiro';
-      src: url('BMEULJIROTTF.ttf') format('truetype');
+      font-family: 'KOTRA_GOTHIC';
+      src: url('KOTRA_GOTHIC.ttf') format('truetype');
     }
 
     body {
-      font-family: 'Euljiro', sans-serif;
+      font-family: 'KOTRA_GOTHIC', sans-serif;
       padding: 20px;
       background: #ffffff;
       max-width: 500px;
@@ -49,8 +48,9 @@
       padding: 10px;
       font-size: 16px;
       background-color: #ededec;
-      border-radius: 10px;
       border: none;
+      border-radius: 12px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
       cursor: pointer;
     }
 
@@ -84,12 +84,11 @@
 
     const today = new Date();
     const currentMonth = `${today.getFullYear()}-${today.getMonth() + 1}`;
-    const currentDateKey = today.toISOString().split("T")[0]; // YYYY-MM-DD
+    const currentDateKey = today.toISOString().split("T")[0];
     const lastResetDate = localStorage.getItem("lastReset");
 
     let counts = JSON.parse(localStorage.getItem("savedCounts")) || {};
 
-    // 🔁 매달 1일이면 자동 초기화
     const isFirstOfMonth = today.getDate() === 1;
     if (lastResetDate !== currentDateKey && isFirstOfMonth) {
       counts = {};
@@ -118,10 +117,9 @@
 
     function changeCount(name, delta, max) {
       counts[name] = Math.min(max, Math.max(0, (counts[name] || 0) + delta));
-      updateDisplay(); // 실시간 업데이트만 (저장은 수동!)
+      updateDisplay();
     }
 
-    // 저장 버튼 기능
     document.getElementById("saveBtn").addEventListener("click", () => {
       localStorage.setItem("savedCounts", JSON.stringify(counts));
       alert("✅ 저장 완료!");
@@ -129,12 +127,10 @@
 
     updateDisplay();
 
-    // 서비스워커 등록 (PWA)
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
 
-    // 전역에서 사용 가능하게
     window.changeCount = changeCount;
   </script>
 </body>
