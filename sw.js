@@ -1,36 +1,41 @@
-const CACHE_NAME = "counter-cache-v2"; // ← 버전 바꿔줘야 함!
-const FILES_TO_CACHE = [
-  "/",
-  "/index.html",
-  "/manifest.json",
-  "/sw.js",
+const CACHE_NAME = 'counter-app-v2'; // ← 여기에 버전 명시!
+
+const urlsToCache = [
+  '/',
+  '/index.html',
+  '/manifest.json',
+  '/style.css',        // 있으면 포함
+  '/sw.js',
+  // 다른 필요한 리소스들 추가
 ];
 
-self.addEventListener("install", event => {
+// 설치 시 캐시
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(urlsToCache);
+    })
   );
 });
 
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key); // 이전 캐시 삭제
-          }
-        })
-      )
-    )
-  );
-  return self.clients.claim();
-});
-
-self.addEventListener("fetch", event => {
+// 요청 시 캐시 사용
+self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(response =>
-      response || fetch(event.request)
-    )
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
+
+// 이전 캐시 제거
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames
+          .filter(name => name !== CACHE_NAME)
+          .map(name => caches.delete(name))
+      );
+    })
   );
 });
