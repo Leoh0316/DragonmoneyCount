@@ -3,7 +3,7 @@
   "short_name": "용돈 기록부",
   "start_url": "index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#282833",
   "theme_color": "#4CAF50",
   "icons": [
     {

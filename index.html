@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>월간 카운터</title>
+  <title>용돈기록부 </title>
   <link rel="manifest" href="manifest.json">
   <style>
     @font-face {
@@ -14,19 +14,21 @@
     body {
       font-family: 'KOTRA_GOTHIC', sans-serif;
       padding: 20px;
-      background: #ffffff;
+      background: #282833; /* 배경색 변경 */
       max-width: 500px;
       margin: auto;
       position: relative;
+      color: white; /* 기본 텍스트 흰색 처리 */
     }
 
     h1 {
       text-align: center;
       font-size: 24px;
+      color: #ffffff; /* 제목 흰색 유지 */
     }
 
     .counter {
-      background: #f0f0f0;
+      background: #3a3a4d; /* 어두운 배경에 어울리는 카드 색상 */
       border-radius: 12px;
       padding: 15px;
       margin: 10px 0;
@@ -36,6 +38,7 @@
       font-size: 18px;
       margin-bottom: 10px;
       font-weight: bold;
+      color: white;
     }
 
     .buttons {
@@ -47,10 +50,11 @@
       flex: 1;
       padding: 10px;
       font-size: 16px;
-      background-color: #ededec;
+      background-color: #6c6c80;
+      color: white;
       border: none;
       border-radius: 12px;
-      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
       cursor: pointer;
     }
 
@@ -70,7 +74,7 @@
   </style>
 </head>
 <body>
-  <h1>📅 월간 카운터</h1>
+  <h1>🪙 용돈 기록부 🪙</h1>
   <div id="counters"></div>
   <button id="saveBtn">💾 저장</button>
 
