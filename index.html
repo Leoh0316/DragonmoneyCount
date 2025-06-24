@@ -5,39 +5,55 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>월간 카운터</title>
   <link rel="manifest" href="manifest.json">
+
   <style>
+    @font-face {
+      font-family: 'Euljiro';
+      src: url('BMEULJIROTTF.ttf') format('truetype');
+    }
+
     body {
-      font-family: sans-serif;
+      font-family: 'Euljiro', sans-serif;
       padding: 20px;
-      background: #fefefe;
+      background: #ffffff;
       max-width: 500px;
       margin: auto;
       position: relative;
     }
+
     h1 {
       text-align: center;
       font-size: 24px;
     }
+
     .counter {
       background: #f0f0f0;
       border-radius: 12px;
       padding: 15px;
       margin: 10px 0;
     }
+
     .label {
       font-size: 18px;
       margin-bottom: 10px;
       font-weight: bold;
     }
+
     .buttons {
       display: flex;
       gap: 10px;
     }
+
     .buttons button {
       flex: 1;
       padding: 10px;
       font-size: 16px;
+      background-color: #ededec;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
     }
+
     #saveBtn {
       position: fixed;
       bottom: 20px;
