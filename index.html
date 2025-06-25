@@ -14,11 +14,11 @@
     body {
       font-family: 'KOTRA_GOTHIC', sans-serif;
       padding: 20px;
-      background: #ffffff; /* 배경 흰색으로 변경 */
+      background: #ffffff;
       max-width: 500px;
       margin: auto;
       position: relative;
-      color: #000000; /* 텍스트 검정 */
+      color: #000000;
     }
 
     h1 {
@@ -27,8 +27,16 @@
       color: #000000;
     }
 
+    .date-info {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 14px;
+      color: #444;
+    }
+
     .counter {
-      background: #f0f0f0; /* 밝은 회색 박스 */
+      background: #f0f0f0;
       border-radius: 12px;
       padding: 15px;
       margin: 10px 0;
@@ -50,11 +58,11 @@
       flex: 1;
       padding: 10px;
       font-size: 16px;
-      background-color: #4caf50; /* 초록색 버튼 */
+      background-color: #4caf50;
       color: white;
       border: none;
       border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
       cursor: pointer;
       transition: transform 0.1s;
     }
@@ -79,6 +87,7 @@
   </style>
 </head>
 <body>
+  <div class="date-info" id="dateInfo"></div>
   <h1>🪙 용돈 기록부 🪙</h1>
   <div id="counters"></div>
   <button id="saveBtn">💾 저장</button>
@@ -92,7 +101,19 @@
     ];
 
     const today = new Date();
-    const currentMonth = `${today.getFullYear()}-${today.getMonth() + 1}`;
+    const yyyy = today.getFullYear();
+    const mm = today.getMonth() + 1;
+    const dd = today.getDate();
+
+    // 다음 달 1일 날짜 구하기
+    const nextMonth = new Date(yyyy, mm, 1); // 자동으로 다음 달 1일로 계산됨
+    const msPerDay = 1000 * 60 * 60 * 24;
+    const diffDays = Math.ceil((nextMonth - today) / msPerDay);
+
+    // 날짜 표시
+    document.getElementById("dateInfo").textContent =
+      `${yyyy}년 ${mm.toString().padStart(2, '0')}월 ${dd.toString().padStart(2, '0')}일 / 용돈까지 ${diffDays}일`;
+
     const currentDateKey = today.toISOString().split("T")[0];
     const lastResetDate = localStorage.getItem("lastReset");
 
