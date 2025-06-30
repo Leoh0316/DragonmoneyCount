@@ -1,4 +1,4 @@
-const CACHE_NAME = 'counter-app-v20'; //
+const CACHE_NAME = 'counter-app-v21'; //
 
 const urlsToCache = [
   '/',
